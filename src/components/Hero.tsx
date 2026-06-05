@@ -1,65 +1,78 @@
+"use client";
+
+import { motion } from "framer-motion";
+import InkLandscape from "./InkLandscape";
+
 export default function Hero() {
   return (
-    <section className="hero" id="hero">
-      {/* Background decorations */}
-      <div className="hero-orb hero-orb-1" />
-      <div className="hero-orb hero-orb-2" />
-      <div className="hero-orb hero-orb-3" />
-      <div className="hero-grid" />
-      <div className="hero-line" />
+    <section
+      className="relative min-h-[124svh] overflow-hidden px-5 pt-24 md:px-8"
+      id="hero"
+    >
+      <div className="absolute left-0 right-0 top-[12%] h-28 mist-band mist-drift opacity-30" />
+      <div className="absolute left-0 right-0 top-[45%] h-40 mist-band mist-drift opacity-45" />
+      <div className="absolute left-0 right-0 top-[61%] h-28 mist-band mist-drift opacity-40" />
+      <InkLandscape
+        className="absolute bottom-[12vh] left-0 h-[56vh] w-full opacity-[0.055] md:h-[62vh]"
+        temple={false}
+        foregroundOpacity={0.34}
+      />
+      <InkLandscape
+        className="absolute bottom-0 left-0 h-[76vh] w-full opacity-[0.075] md:h-[86vh]"
+        reflection
+        templeX={870}
+        templeY={334}
+      />
 
-      <div className="container">
-        <div className="hero-content">
-          <span className="hero-eyebrow">
-            <span className="pulse-dot" />
-            Welcome to HybridMonks
-          </span>
+      <div className="relative z-10 mx-auto max-w-7xl">
+        <motion.div
+          initial={{ opacity: 0, y: 28 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1.25, ease: "easeOut" }}
+          className="max-w-3xl pt-[21vh] md:ml-[7vw] md:pt-[24vh]"
+        >
+          <div className="mb-8 flex items-center gap-5">
+            <span className="h-px w-16 bg-ink/30" />
+            <span className="font-jp text-xs uppercase tracking-[0.46em] text-seal">
+              禅 Ancient Wisdom
+            </span>
+          </div>
 
-          <h1 className="hero-heading">
-            Crafting <span className="accent">Premium</span> Digital
-            Experiences That <span className="accent">Inspire</span>
+          <h1 className="ink-shadow max-w-4xl text-6xl font-light leading-[0.96] tracking-[0.06em] text-ink md:text-8xl lg:text-9xl">
+            Digital craft
+            <span className="block italic text-inkMuted">in quiet ink.</span>
           </h1>
 
-          <p className="hero-desc">
-            We blend strategy, design, and technology to build solutions that
-            elevate brands and drive measurable growth for forward-thinking
-            businesses.
+          <p className="mt-10 max-w-2xl text-xl leading-9 text-inkMuted md:text-2xl">
+            HybridMonks shapes websites, products, and digital systems with the
+            patience of a scroll painter: deliberate, spare, and built to endure.
           </p>
 
-          <div className="hero-actions">
-            <a href="#contact" className="btn btn-primary" id="hero-cta">
-              Start Your Project
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M5 12h14" /><path d="m12 5 7 7-7 7" />
-              </svg>
+          <div className="mt-12 flex items-center gap-8">
+            <a
+              href="#contact"
+              className="border border-ink/40 px-8 py-4 font-jp text-xs uppercase tracking-[0.36em] text-ink transition-colors duration-300 hover:border-seal hover:text-seal"
+            >
+              Begin
             </a>
-            <a href="#services" className="btn btn-outline-light" id="hero-secondary-cta">
-              Explore Services
+            <a
+              href="#services"
+              className="font-jp text-xs uppercase tracking-[0.36em] text-inkMuted transition-colors duration-300 hover:text-ink"
+            >
+              Read the scroll
             </a>
           </div>
+        </motion.div>
 
-          <div className="hero-metrics">
-            <div className="metric">
-              <div className="metric-value">150+</div>
-              <div className="metric-label">Projects Delivered</div>
-            </div>
-            <div className="metric">
-              <div className="metric-value">50+</div>
-              <div className="metric-label">Happy Clients</div>
-            </div>
-            <div className="metric">
-              <div className="metric-value">5+</div>
-              <div className="metric-label">Years of Expertise</div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Right decorative visual */}
-      <div className="hero-visual" aria-hidden="true">
-        <div className="hero-visual-ring">
-          <div className="hero-visual-center">⬡</div>
-        </div>
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 2.2, delay: 0.4 }}
+          className="vertical-ink absolute right-0 top-10 hidden font-jp text-8xl font-light text-ink/[0.08] md:block"
+          aria-hidden="true"
+        >
+          静
+        </motion.div>
       </div>
     </section>
   );
