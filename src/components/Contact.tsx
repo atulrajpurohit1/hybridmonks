@@ -5,46 +5,94 @@ import { motion } from "framer-motion";
 import InkLandscape from "./InkLandscape";
 import SectionHeading from "./SectionHeading";
 
+type SubmissionState = "idle" | "sending" | "sent" | "error";
+
+const address = "Chand Colony, Sadri, 306702, Pali, Rajasthan (India)";
+const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+  address,
+)}`;
+
 const contactInfo = [
   {
     title: "Phone",
-    value: "+91 XXXXX XXXXX",
-    href: "tel:+91XXXXXXXXXX",
+    value: "+91 87990 01675",
+    href: "tel:+918799001675",
     isLink: true,
   },
   {
     title: "Email",
-    value: "info@example.com",
-    href: "mailto:info@example.com",
+    value: "info@hybridmonks.com",
+    href: "mailto:info@hybridmonks.com",
     isLink: true,
   },
   {
     title: "Address",
-    value: "Purohitvas Gangadham Wasada",
-    href: "",
-    isLink: false,
+    value: address,
+    href: googleMapsUrl,
+    isLink: true,
+    isExternal: true,
   },
 ];
 
 export default function Contact() {
-  const [submitted, setSubmitted] = useState(false);
+  const [submissionState, setSubmissionState] =
+    useState<SubmissionState>("idle");
+  const [statusMessage, setStatusMessage] = useState("");
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    setSubmitted(true);
-    setTimeout(() => setSubmitted(false), 4000);
-    event.currentTarget.reset();
+
+    const form = event.currentTarget;
+    const formData = new FormData(form);
+
+    setSubmissionState("sending");
+    setStatusMessage("");
+
+    try {
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(Object.fromEntries(formData)),
+      });
+      const result = (await response.json().catch(() => null)) as {
+        message?: string;
+      } | null;
+
+      if (!response.ok) {
+        throw new Error(result?.message ?? "Unable to send message.");
+      }
+
+      setSubmissionState("sent");
+      setStatusMessage(result?.message ?? "Message sent.");
+      form.reset();
+      setTimeout(() => {
+        setSubmissionState("idle");
+        setStatusMessage("");
+      }, 5000);
+    } catch (error) {
+      setSubmissionState("error");
+      setStatusMessage(
+        error instanceof Error ? error.message : "Unable to send message.",
+      );
+    }
   };
 
   return (
-    <section className="relative overflow-hidden px-5 py-28 md:px-8 md:py-40" id="contact">
+    <section
+      className="relative overflow-hidden px-5 py-28 md:px-8 md:py-40"
+      id="contact"
+    >
       <InkLandscape
-        className="absolute bottom-0 left-0 h-48 w-full opacity-[0.04]"
+        className="absolute bottom-0 left-0 h-56 w-full opacity-[0.065]"
         mirror
         temple={false}
         foregroundOpacity={0.34}
       />
-      <div className="absolute inset-x-0 top-0 h-28 mist-band mist-drift opacity-30" />
+      <div className="absolute inset-x-[-8%] bottom-0 h-[28rem] temple-silhouette opacity-[0.12]" />
+      <div className="absolute inset-x-0 top-0 h-28 mist-band mist-drift opacity-38" />
+      <div className="absolute right-0 top-20 hidden h-[36rem] w-[30rem] zen-garden opacity-30 lg:block" />
 
       <div className="relative z-10 mx-auto max-w-7xl">
         <motion.div
@@ -74,14 +122,19 @@ export default function Contact() {
             className="space-y-10"
           >
             {contactInfo.map((item) => (
-              <div key={item.title} className="border-t border-ink/15 pt-6">
+              <div
+                key={item.title}
+                className="group border-t border-ink/15 pt-6 transition-colors duration-700 hover:border-seal/40"
+              >
                 <h3 className="font-jp text-xs uppercase tracking-[0.38em] text-seal">
                   {item.title}
                 </h3>
                 {item.isLink ? (
                   <a
                     href={item.href}
-                    className="mt-3 block text-3xl font-light tracking-[0.05em] text-ink transition-colors hover:text-seal"
+                    target={item.isExternal ? "_blank" : undefined}
+                    rel={item.isExternal ? "noreferrer" : undefined}
+                    className="mt-3 block text-3xl font-light tracking-[0.05em] text-ink transition-colors duration-500 hover:text-seal"
                   >
                     {item.value}
                   </a>
@@ -100,7 +153,7 @@ export default function Contact() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-120px" }}
             transition={{ duration: 0.9, delay: 0.12, ease: "easeOut" }}
-            className="space-y-10 border-t border-ink/20 pt-8"
+            className="paper-card space-y-10 px-5 py-8 md:px-10 md:py-10"
           >
             <div className="grid gap-10 md:grid-cols-2">
               <label className="block">
@@ -108,9 +161,12 @@ export default function Contact() {
                   Name
                 </span>
                 <input
+                  name="name"
                   type="text"
+                  maxLength={120}
+                  autoComplete="name"
                   required
-                  className="mt-4 w-full border-b border-ink/25 bg-transparent py-3 text-xl text-ink outline-none transition-colors focus:border-seal"
+                  className="mt-4 w-full border-b border-ink/25 bg-transparent py-3 text-xl text-ink outline-none transition-colors duration-500 focus:border-seal"
                 />
               </label>
               <label className="block">
@@ -118,9 +174,12 @@ export default function Contact() {
                   Email
                 </span>
                 <input
+                  name="email"
                   type="email"
+                  maxLength={160}
+                  autoComplete="email"
                   required
-                  className="mt-4 w-full border-b border-ink/25 bg-transparent py-3 text-xl text-ink outline-none transition-colors focus:border-seal"
+                  className="mt-4 w-full border-b border-ink/25 bg-transparent py-3 text-xl text-ink outline-none transition-colors duration-500 focus:border-seal"
                 />
               </label>
             </div>
@@ -130,9 +189,11 @@ export default function Contact() {
                 Subject
               </span>
               <input
+                name="subject"
                 type="text"
+                maxLength={160}
                 required
-                className="mt-4 w-full border-b border-ink/25 bg-transparent py-3 text-xl text-ink outline-none transition-colors focus:border-seal"
+                className="mt-4 w-full border-b border-ink/25 bg-transparent py-3 text-xl text-ink outline-none transition-colors duration-500 focus:border-seal"
               />
             </label>
 
@@ -141,18 +202,37 @@ export default function Contact() {
                 Message
               </span>
               <textarea
+                name="message"
                 required
+                maxLength={4000}
                 rows={5}
-                className="mt-4 w-full resize-none border-b border-ink/25 bg-transparent py-3 text-xl text-ink outline-none transition-colors focus:border-seal"
+                className="mt-4 w-full resize-none border-b border-ink/25 bg-transparent py-3 text-xl text-ink outline-none transition-colors duration-500 focus:border-seal"
               />
             </label>
 
-            <button
-              type="submit"
-              className="border border-ink/35 px-8 py-4 font-jp text-xs uppercase tracking-[0.36em] text-ink transition-colors hover:border-seal hover:text-seal"
-            >
-              {submitted ? "Message sent" : "Send message"}
-            </button>
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
+              <button
+                type="submit"
+                disabled={submissionState === "sending"}
+                className="luxury-button border border-ink/35 px-8 py-4 font-jp text-xs uppercase tracking-[0.36em] text-ink transition-colors duration-500 hover:border-seal hover:text-seal disabled:cursor-not-allowed disabled:opacity-55"
+              >
+                {submissionState === "sending"
+                  ? "Sending..."
+                  : submissionState === "sent"
+                    ? "Message sent"
+                    : "Send message"}
+              </button>
+              {statusMessage ? (
+                <p
+                  aria-live="polite"
+                  className={`font-jp text-xs tracking-[0.2em] ${
+                    submissionState === "error" ? "text-seal" : "text-inkMuted"
+                  }`}
+                >
+                  {statusMessage}
+                </p>
+              ) : null}
+            </div>
           </motion.form>
         </div>
       </div>

@@ -8,12 +8,13 @@ const navLinks = [
   { label: "Why Us", href: "#why-us" },
   { label: "Services", href: "#services" },
   { label: "About", href: "#about" },
+  { label: "Contact", href: "#contact" },
 ];
 
 export default function Header() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [activeSection, setActiveSection] = useState("");
+  const [activeSection, setActiveSection] = useState("hero");
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
@@ -57,7 +58,7 @@ export default function Header() {
           <img
             src="/logo.png"
             alt=""
-            className="h-12 w-12 object-contain"
+            className="h-14 w-14 object-contain md:h-16 md:w-16"
           />
           <span className="font-display text-2xl font-light tracking-[0.16em] text-ink">
             HybridMonks
@@ -65,30 +66,27 @@ export default function Header() {
         </a>
 
         <nav className="hidden items-center gap-9 md:flex">
-          {navLinks.map((link) => (
-            <a
-              key={link.href}
-              href={link.href}
-              className={`relative font-jp text-[0.72rem] uppercase tracking-[0.34em] transition-colors duration-300 ${
-                activeSection === link.href.slice(1)
-                  ? "text-seal"
-                  : "text-inkMuted hover:text-ink"
-              }`}
-            >
-              {link.label}
-              <span
-                className={`absolute -bottom-2 left-0 h-px bg-seal transition-all duration-500 ${
-                  activeSection === link.href.slice(1) ? "w-full" : "w-0"
+          {navLinks.map((link) => {
+            const isActive = activeSection === link.href.slice(1);
+
+            return (
+              <a
+                key={link.href}
+                href={link.href}
+                aria-current={isActive ? "page" : undefined}
+                className={`relative font-display text-[0.72rem] uppercase tracking-[0.34em] transition-colors duration-300 ${
+                  isActive ? "text-seal" : "text-inkMuted hover:text-ink"
                 }`}
-              />
-            </a>
-          ))}
-          <a
-            href="#contact"
-            className="border-b border-seal/50 pb-1 font-jp text-[0.72rem] uppercase tracking-[0.34em] text-seal transition-colors hover:text-ink"
-          >
-            Contact
-          </a>
+              >
+                {link.label}
+                <span
+                  className={`absolute -bottom-2 left-0 h-px bg-seal transition-all duration-500 ${
+                    isActive ? "w-full" : "w-0"
+                  }`}
+                />
+              </a>
+            );
+          })}
         </nav>
 
         <button
@@ -128,23 +126,23 @@ export default function Header() {
             <span className="font-jp text-7xl text-ink/[0.06]" aria-hidden="true">
               静
             </span>
-            {navLinks.map((link) => (
-              <a
-                key={link.href}
-                href={link.href}
-                onClick={() => setMobileOpen(false)}
-                className="font-display text-4xl font-light tracking-[0.18em] text-ink"
-              >
-                {link.label}
-              </a>
-            ))}
-            <a
-              href="#contact"
-              onClick={() => setMobileOpen(false)}
-              className="border-b border-seal pb-2 font-jp text-xs uppercase tracking-[0.4em] text-seal"
-            >
-              Contact
-            </a>
+            {navLinks.map((link) => {
+              const isActive = activeSection === link.href.slice(1);
+
+              return (
+                <a
+                  key={link.href}
+                  href={link.href}
+                  aria-current={isActive ? "page" : undefined}
+                  onClick={() => setMobileOpen(false)}
+                  className={`font-display text-4xl font-light tracking-[0.18em] transition-colors ${
+                    isActive ? "text-seal" : "text-ink"
+                  }`}
+                >
+                  {link.label}
+                </a>
+              );
+            })}
           </motion.div>
         )}
       </AnimatePresence>

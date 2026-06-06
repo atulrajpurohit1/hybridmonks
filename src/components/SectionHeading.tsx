@@ -14,7 +14,17 @@ export default function SectionHeading({
   className = "",
 }: SectionHeadingProps) {
   return (
-    <div className={`relative ${align === "center" ? "text-center mx-auto" : ""} ${className}`}>
+    <div
+      className={`relative ${
+        align === "center" ? "text-center mx-auto" : ""
+      } ${className}`}
+    >
+      <span
+        className={`brush-sweep pointer-events-none absolute top-1 h-16 w-72 opacity-70 ${
+          align === "center" ? "left-1/2 -translate-x-1/2" : "-left-12"
+        }`}
+        aria-hidden="true"
+      />
       <span
         className={`font-jp text-7xl md:text-8xl text-ink/[0.055] absolute -top-12 ${
           align === "center" ? "left-1/2 -translate-x-1/2" : "-left-8"
@@ -33,7 +43,7 @@ export default function SectionHeading({
           {eyebrow}
         </span>
       </div>
-      <h2 className="ink-shadow text-4xl md:text-6xl leading-[1.08] text-ink">
+      <h2 className="ink-shadow text-4xl leading-[1.08] text-ink md:text-6xl">
         {title}
       </h2>
     </div>

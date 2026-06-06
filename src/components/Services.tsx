@@ -70,9 +70,9 @@ function InkIcon({ name }: { name: string }) {
     <svg
       aria-hidden="true"
       viewBox="0 0 60 60"
-      className="h-14 w-14 overflow-visible"
+      className="h-14 w-14 overflow-visible text-inkMuted transition-colors duration-500 group-hover:text-seal"
       fill="none"
-      stroke="#111111"
+      stroke="currentColor"
       strokeLinecap="round"
       strokeLinejoin="round"
       strokeWidth="2.2"
@@ -86,10 +86,15 @@ function InkIcon({ name }: { name: string }) {
 
 export default function Services() {
   return (
-    <section className="relative overflow-hidden px-5 py-28 md:px-8 md:py-44" id="services">
-      <div className="absolute inset-x-0 top-1/3 h-32 mist-band mist-drift opacity-35" />
+    <section
+      className="relative overflow-hidden px-5 py-28 md:px-8 md:py-44"
+      id="services"
+    >
+      <div className="absolute inset-x-0 top-1/3 h-32 mist-band mist-drift opacity-40" />
+      <div className="absolute inset-x-[-8%] top-20 h-[26rem] temple-silhouette opacity-[0.1]" />
+      <div className="absolute inset-x-0 bottom-0 h-[32rem] zen-garden opacity-35" />
       <InkLandscape
-        className="absolute left-0 top-0 h-72 w-full opacity-[0.045]"
+        className="absolute left-0 top-0 h-72 w-full opacity-[0.06]"
         temple={false}
         foregroundOpacity={0.28}
       />
@@ -125,19 +130,25 @@ export default function Services() {
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: "-120px" }}
-          className="grid gap-x-24 md:grid-cols-2"
+          className="relative grid gap-x-24 md:grid-cols-2"
         >
           {services.map((service, index) => (
             <motion.article
               key={service.num}
               variants={itemVariants}
-              className={`border-t border-ink/15 py-10 ${
+              className={`group relative border-t border-ink/15 px-3 py-12 transition-colors duration-700 hover:border-seal/45 ${
                 index % 2 === 1 ? "md:translate-y-20" : ""
               }`}
             >
+              <span
+                className="absolute right-3 top-5 h-10 w-10 border border-seal/25 opacity-0 transition-opacity duration-700 group-hover:opacity-100"
+                aria-hidden="true"
+              />
               <div className="grid grid-cols-[4.5rem_1fr] gap-6">
                 <div className="flex flex-col items-center gap-5">
-                  <span className="font-jp text-3xl text-seal/85">{service.num}</span>
+                  <span className="font-jp text-3xl text-seal/85">
+                    {service.num}
+                  </span>
                   <InkIcon name={service.icon} />
                 </div>
                 <div>
