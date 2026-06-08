@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Yuji_Boku } from "next/font/google";
+import { Analytics } from "@vercel/analytics/react";
 import "./globals.css";
 
 const brush = Yuji_Boku({
@@ -31,6 +32,7 @@ export default function RootLayout({
         <div className="fixed inset-0 scroll-atmosphere pointer-events-none z-0" />
         <div className="fixed inset-0 paper-grain pointer-events-none z-0" />
         <div className="relative z-10">{children}</div>
+        <Analytics />
       </body>
     </html>
   );
